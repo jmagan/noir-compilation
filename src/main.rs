@@ -20,6 +20,10 @@ use rayon::prelude::{IntoParallelIterator, ParallelBridge, ParallelIterator};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    rayon::ThreadPoolBuilder::new()
+        .stack_size(4 * 1024 * 1024)
+        .build_global()?;
+
     let path = PathBuf::from(std::env::current_dir().unwrap().join("./noir_project"));
     let toml_path = get_package_manifest(&path)?;
     let workspace = resolve_workspace_from_toml(
